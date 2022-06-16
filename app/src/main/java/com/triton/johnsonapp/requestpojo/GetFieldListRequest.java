@@ -9,7 +9,7 @@ public class GetFieldListRequest {
     private String job_id;
     private String user_id ;
     private String user_role;
-
+private  String work_status;
 
 
     public String getUser_id() {
@@ -50,5 +50,13 @@ public class GetFieldListRequest {
 
     public void setUser_role(String user_role) {
         this.user_role = user_role;
+    }
+
+    public String getWork_status() {
+        return work_status;
+    }
+
+    public void setWork_status(String work_status) {
+        this.work_status = work_status;
     }
 }

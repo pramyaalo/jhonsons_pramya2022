@@ -7,7 +7,7 @@
     <color name="light_black">#80000000</color>
     <color name="default_shadow_color">#88757575</color>
     <color name="black">#000000</color>
-
+<color name="Light_grey">#C0C0C0</color>
     <color name="float_transparent">#00000000</color>
     <color name="sweet_dialog_bg_color">#FFFFFF</color>
     <color name="button_text_color">#FFFFFF</color>

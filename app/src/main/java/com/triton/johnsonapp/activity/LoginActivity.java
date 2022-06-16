@@ -330,7 +330,7 @@ private void ShowPopup()
                                 imeicode = response.body().getData().getImie_code();
 
 
-                            if (imeicode.equals(ID) ) {
+                           /* if (imeicode.equals(ID) ) {*/
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                  userid = response.body().getData().get_id();
@@ -354,10 +354,10 @@ private void ShowPopup()
                             Log.e("UserId", response.body().getData().get_id());
 
 
-                            } else {
+                          /*  }*/ /*else {
                                 ShowPopup();
                                 dialog.dismiss();
-                            }
+                            }*/
 
 
 

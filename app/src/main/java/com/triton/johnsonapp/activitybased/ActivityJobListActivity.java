@@ -151,6 +151,8 @@ public class ActivityJobListActivity extends AppCompatActivity implements OnMapR
         userid = user.get(SessionManager.KEY_USERID);
 
         username = user.get(SessionManager.KEY_USERNAME);
+
+
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -160,12 +162,13 @@ public class ActivityJobListActivity extends AppCompatActivity implements OnMapR
             UKEY_DESC = extras.getString("UKEY_DESC");
             form_type = extras.getInt("form_type");
             new_count = extras.getInt("new_count");
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString("_UKEY", UKEY);
-            editor.commit();
+
             Log.w(TAG,"ukey"+UKEY);
             pause_count = extras.getInt("pause_count");
-
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("ukey",UKEY );
+            editor.apply();
             Log.w(TAG,"activity_id -->"+activity_id+" status : "+status);
 
             if(status != null && status.equalsIgnoreCase("New")){

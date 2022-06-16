@@ -5,6 +5,7 @@ import com.triton.johnsonapp.requestpojo.ActivityGetListNumberRequest;
 import com.triton.johnsonapp.requestpojo.ActivityListManagementRequest;
 import com.triton.johnsonapp.requestpojo.AttendanceCreateRequest;
 import com.triton.johnsonapp.requestpojo.AttendanceLogoutRequest;
+import com.triton.johnsonapp.requestpojo.BreedTypeRequest1;
 import com.triton.johnsonapp.requestpojo.CheckDataStoreRequest;
 import com.triton.johnsonapp.requestpojo.CheckLocationRequest;
 import com.triton.johnsonapp.requestpojo.FetchRecordByUserIDRequest;
@@ -20,6 +21,8 @@ import com.triton.johnsonapp.requestpojo.GroupDetailManagementRequest;
 import com.triton.johnsonapp.requestpojo.ImageBasedStroeDataRequest;
 import com.triton.johnsonapp.requestpojo.JobFetchAddressRequest;
 import com.triton.johnsonapp.requestpojo.JobNoManagementRequest;
+import com.triton.johnsonapp.requestpojo.JoinInspecCheckStatusRequest;
+import com.triton.johnsonapp.requestpojo.JoinInspectionRequest;
 import com.triton.johnsonapp.requestpojo.LoginRequest;
 import com.triton.johnsonapp.requestpojo.PauseJobRequest;
 import com.triton.johnsonapp.requestpojo.ResumeJobRequest;
@@ -32,6 +35,7 @@ import com.triton.johnsonapp.requestpojo.SubordActivityFormReqest;
 import com.triton.johnsonapp.responsepojo.ActivityGetListNumberResponse;
 import com.triton.johnsonapp.responsepojo.ActivityListManagementResponse;
 import com.triton.johnsonapp.responsepojo.ActivityPumpChartDropdown;
+import com.triton.johnsonapp.responsepojo.BreedTypeResponse1;
 import com.triton.johnsonapp.responsepojo.CheckDataStoreResponse;
 import com.triton.johnsonapp.responsepojo.FetchRecordByUserIDResponse;
 import com.triton.johnsonapp.responsepojo.FileUploadResponse;
@@ -44,6 +48,8 @@ import com.triton.johnsonapp.responsepojo.GetServiceListResponse;
 import com.triton.johnsonapp.responsepojo.GroupDetailManagementResponse;
 import com.triton.johnsonapp.responsepojo.JobFetchAddressResponse;
 import com.triton.johnsonapp.responsepojo.JobNoManagementResponse;
+import com.triton.johnsonapp.responsepojo.JoinInspectionCheckStatusResponse;
+import com.triton.johnsonapp.responsepojo.JoinInspectionResponse;
 import com.triton.johnsonapp.responsepojo.LeaveFormDataStoreResponse;
 import com.triton.johnsonapp.responsepojo.LoginResponse;
 import com.triton.johnsonapp.responsepojo.Searchenggresponse;
@@ -237,6 +243,10 @@ public interface APIInterface {
 
 
 
-
-
+    @POST("activity/get_joins_user_list")
+    Call<BreedTypeResponse1> breedTypeResponseByPetIdCall(@Header("Content-Type") String type, @Body BreedTypeRequest1 breedTypeRequest);
+@POST("activity/update_join_inspect_hdr")
+    Call<JoinInspectionResponse>JoinInspectionResponse1Call(@Header("Content_type") String type, @Body JoinInspectionRequest joinInspectionRequest);
+@POST("activity/join_inspec_check_status")
+    Call<JoinInspectionCheckStatusResponse>JoinInspectionCheckstatusResponseCall(@Header("Content_type")String type, @Body JoinInspecCheckStatusRequest joinInspecCheckStatusRequest);
 }

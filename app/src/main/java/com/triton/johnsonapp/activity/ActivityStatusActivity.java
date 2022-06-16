@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -70,7 +71,7 @@ public class ActivityStatusActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         Log.w(TAG,"Oncreate -->");
-
+        ImageView img_back=(ImageView)findViewById(R.id.img_back);
         SessionManager  session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         userid = user.get(SessionManager.KEY_ID);
@@ -100,7 +101,12 @@ public class ActivityStatusActivity extends AppCompatActivity {
         if(pause_count != 0){
             btn_pause.setText("Pause  ( "+pause_count+" ) ");
         }
-
+img_back.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        onBackPressed();
+    }
+});
         btn_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

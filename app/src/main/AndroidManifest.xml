@@ -40,9 +40,11 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
+
         <activity
-            android:name=".SearchEng"
-            android:exported="false" />
+            android:name=".activity.ActivitySelectEngineerPopup"
+            android:theme="@style/AppTheme.NoActionBar"
+              android:exported="false" />
         <activity
             android:name=".activity.FullScreenImageActivity"
             android:exported="false"

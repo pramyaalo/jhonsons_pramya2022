@@ -102,7 +102,7 @@
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
 
@@ -139,31 +139,49 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_subgrouplist"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:visibility="visible" />
 
 
 
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/btn_submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:paddingStart="@dimen/_35dp"
-                android:paddingEnd="@dimen/_35dp"
-                android:layout_marginVertical="@dimen/_15dp"
-                android:layout_marginHorizontal="@dimen/_15dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/blue_button_background_with_radius"
-                android:textColor="@color/white"
-                android:layout_gravity="right"
-                 android:text="Submit"/>
+
 
 
         </LinearLayout>
+
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/footerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/_10dp">
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/blue_button_background_with_radius"
+            android:drawableEnd="@drawable/icn_next"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="Submit"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textAllCaps="false">
+
+
+        </Button>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/footerView"

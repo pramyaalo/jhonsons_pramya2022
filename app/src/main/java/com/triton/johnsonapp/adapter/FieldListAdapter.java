@@ -2,6 +2,9 @@ package com.triton.johnsonapp.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,9 +19,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -46,14 +51,15 @@ import java.util.List;
 
 public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private  String TAG = "FieldListAdapter";
+     private  String TAG = "FieldListAdapter";
     private List<GetFieldListResponse.DataBean> dataBeanList;
     private Context context;
-
-    GetFieldListResponse.DataBean currentItem;
+    public String Ukey;
+    public String label;
+     GetFieldListResponse.DataBean currentItem;
 
     private int size;
-
+    final int color = R.color.Light_grey;
     int ITEMS_PER_PAGE;
 
     int TOTAL_NUM_ITEMS;
@@ -85,9 +91,10 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
     int check = 0;
     private List<?> arrayListdropdown;
     private String userrole;
+    private String key;
 
     public FieldListAdapter(Context context, List<GetFieldListResponse.DataBean> dataBeanList, int ITEMS_PER_PAGE, int TOTAL_NUM_ITEMS, GetStringListener getStringListener, GetTextAreaListener getTextAreaListener, GetSpinnerListener getSpinnerListener, GetNumberListener getNumberListener, GetDateTimeListener getDateTimeListener,
-                            GetFileUploadListener getFileUploadListener, GetDigitalSignUploadListener getDigitalSignUploadListener, GetDigitalSignUploadAddListener getDigitalSignUploadAddListener, GetDigitalSignUploadClearListener getDigitalSignUploadClearListener,  GetInputFieldListener getInputFieldListener,int currentPage,String userrole) {
+                            GetFileUploadListener getFileUploadListener, GetDigitalSignUploadListener getDigitalSignUploadListener, GetDigitalSignUploadAddListener getDigitalSignUploadAddListener, GetDigitalSignUploadClearListener getDigitalSignUploadClearListener,  GetInputFieldListener getInputFieldListener,int currentPage,String userrole,String key) {
         this.context = context;
         this.dataBeanList = dataBeanList;
         this.ITEMS_PER_PAGE = ITEMS_PER_PAGE;
@@ -104,6 +111,9 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
         this.currentPage=currentPage;
         this.getInputFieldListener = getInputFieldListener;
         this.userrole = userrole;
+        this.key=key;
+
+
     }
 
     @NonNull
@@ -111,6 +121,7 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_fieldlist, parent, false);
         return new ViewHolderOne(view);
+
     }
 
     @Override
@@ -118,18 +129,19 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
 
         initLayoutOne((ViewHolderOne) holder, position);
 
-
     }
 
     @SuppressLint({"SetTextI18n", "LogNotTimber"})
     private void initLayoutOne(ViewHolderOne holder, final int position) {
 
-
-        currentItem = dataBeanList.get(position);
+         currentItem = dataBeanList.get(position);
         Log.w(TAG,"CURRENTITEM-----"+currentItem.getField_length());
 
         int startItem=currentPage*ITEMS_PER_PAGE+position;
+if(key.equalsIgnoreCase("OP-ACT8"))
+{
 
+}
 //        Log.w(TAG,"currentItem startItem "+startItem);
 //
 //        Log.w(TAG,"currentItem POS "+position);
@@ -144,6 +156,13 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txt_field_title.setText("");
 
         }
+        if(key!=null && !key.equalsIgnoreCase("OP-ACT8"))
+        {
+            if(currentItem.getField_name() != null && !currentItem.getField_name().equals("OK")) {
+holder.cv_root.setVisibility(View.GONE);
+            }
+        }
+
         if(currentItem.getField_comments() != null && !currentItem.getField_comments().equals("")){
             holder.txt_field_comments.setText(currentItem.getField_comments());
         }else{
@@ -256,13 +275,23 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                 //Log.w(TAG,"responsemessage : "+InputValueFormListActivity.responsemessage );
 
                 if(InputValueFormListActivity.responsemessage != null && InputValueFormListActivity.responsemessage.equalsIgnoreCase("Joininspection")){
-                    if(userrole != null && userrole.equalsIgnoreCase("USER")){
-                        if(currentItem.getField_value() != null && !currentItem.getField_value().equalsIgnoreCase("OK")){
+                    if(key!=null && key.equalsIgnoreCase("OP-ACT8"))
+                    {
+                        if(currentItem.getField_value() != null && !currentItem.getField_value().equalsIgnoreCase("OK")) {
+                            holder.cv_root.setVisibility(View.GONE);
+                          }
+                        else
+                        {
+                            holder.cv_root.setVisibility(View.GONE);
+                        }
+                    }
+
+                    if(key != null && key.equalsIgnoreCase("OP-ACT8")){
                             arrayListdropdown =  currentItem.getDrop_down();
                             //Log.w(TAG,"currentItem.getDrop_down() : "+new Gson().toJson(currentItem.getDrop_down()));
 
                             holder.ll_dropdown.setVisibility(View.VISIBLE);
-
+                            holder.cv_root.setVisibility(View.VISIBLE);
                             ArrayList<String> arrayList = new ArrayList<>();
 
                             arrayList.add("Select Value");
@@ -277,7 +306,7 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, arrayList);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                            //Log.w(TAG,"currentItem.getDrop_down() Field_comments : "+currentItem.getField_comments()+" Field_value : "+currentItem.getField_value());
+                            //Log.w(TAG,"currentItem.getDrop_down
 
                             if(currentItem.getField_value() != null && !currentItem.getField_value().isEmpty()){
                                 //if(currentItem.getField_comments()!=null && !currentItem.getField_comments().isEmpty()){
@@ -302,6 +331,16 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                                             getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                         }
+                                        String val=holder.spr_dropdown.getSelectedItem().toString();
+                                        Log.e("val",val);
+                                        if(val.equals("OK"))
+                                        {
+                                           // holder.cv_root.setEnabled(false);
+                                            holder.spr_dropdown.setEnabled(false);
+                                            holder.cv_root.setCardBackgroundColor(Color.LTGRAY);
+
+                                        }
+                                       // Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
 
                                     }
                                     public void onNothingSelected(AdapterView<?> parent) {
@@ -325,6 +364,13 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                                             getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                         }
+                                        String val=holder.spr_dropdown.getSelectedItem().toString();
+                                        Log.e("val",val);
+
+
+/*
+                                        Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+*/
                                     }
                                     public void onNothingSelected(AdapterView<?> parent) {
 
@@ -334,10 +380,11 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
 
                             }
 
-                        }
+                     /*
                         else{
                             holder.cv_root.setVisibility(View.GONE);
-                        }
+
+                        }*/
 
                     }   else{
                         holder.cv_root.setVisibility(View.VISIBLE);
@@ -385,6 +432,9 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                                         getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                     }
+                                    String val=holder.spr_dropdown.getSelectedItem().toString();
+                                    Log.e("val",val);
+                                    Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
 
                                 }
                                 public void onNothingSelected(AdapterView<?> parent) {
@@ -408,6 +458,9 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                                         getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                     }
+                                    String val=holder.spr_dropdown.getSelectedItem().toString();
+                                    Log.e("val",val);
+                                    Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
                                 }
                                 public void onNothingSelected(AdapterView<?> parent) {
 
@@ -465,6 +518,11 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                                     getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                 }
+                                String val=holder.spr_dropdown.getSelectedItem().toString();
+                                Log.e("val",val);
+                                Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+
+
 
                             }
                             public void onNothingSelected(AdapterView<?> parent) {
@@ -485,9 +543,13 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
 
                                     Log.w(TAG,"currentItem POS "+parent.getItemAtPosition(pos));
 
+
                                     getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                 }
+                                String  label1 = String.valueOf(holder.spr_dropdown.getSelectedItem());
+                                Log.e("lable", label1);
+                                Toast.makeText(context.getApplicationContext(),label1, Toast.LENGTH_SHORT).show();
                             }
                             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -709,7 +771,7 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
         RecyclerView rv_liftinputlist;
         CardView cv_image,cv_root;
 
-
+String lable;
 
         public ViewHolderOne(View itemView) {
             super(itemView);
@@ -720,6 +782,8 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
             edt_number = itemView.findViewById(R.id.edt_number);
             ll_dropdown = itemView.findViewById(R.id.ll_dropdown);
             spr_dropdown = itemView.findViewById(R.id.spr_dropdown);
+            lable= String.valueOf(spr_dropdown);
+
             img_spinner = itemView.findViewById(R.id.img_spinner);
             edt_datetime = itemView.findViewById(R.id.edt_datetime);
             ll_file_upload = itemView.findViewById(R.id.ll_file_upload);
@@ -736,6 +800,10 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
             cv_image = itemView.findViewById(R.id.cv_image);
             rv_liftinputlist = itemView.findViewById(R.id.rv_liftinputlist);
             cv_root = itemView.findViewById(R.id.cv_root);
+
+        }
+
+
         }
 
 
@@ -746,4 +814,4 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 
-}
+

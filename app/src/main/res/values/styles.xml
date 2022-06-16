@@ -120,6 +120,13 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="background">@android:color/transparent</item>
     </style>
+    <style name="Theme.UserDialog" parent="android:style/Theme.Dialog">
+           <item name="android:windowNoTitle">true</item>
+        <item name="android:layout_height">600dp</item>
+        <item name="android:layout_width">600dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
 
     <style name="Widget.GifMoviewView" parent="@android:style/Widget"></style>
 

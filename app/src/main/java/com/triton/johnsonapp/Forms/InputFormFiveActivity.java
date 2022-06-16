@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -58,6 +59,7 @@ import com.triton.johnsonapp.responsepojo.SuccessResponse;
 import com.triton.johnsonapp.responsepojo.ViewInfoResponse;
 import com.triton.johnsonapp.session.SessionManager;
 import com.triton.johnsonapp.utils.ConnectionDetector;
+import com.triton.johnsonapp.utils.DBMain;
 import com.triton.johnsonapp.utils.RestUtils;
 
 import java.text.SimpleDateFormat;
@@ -77,10 +79,12 @@ import retrofit2.Response;
 
 public class InputFormFiveActivity extends AppCompatActivity implements GetAcceptQtyListner, GetDamageQtyListner, GetExcessListner, GetShortListner, GetRemarksListner {
 
+
+
+
+
     private final String TAG ="InputFormFiveActivity";
-
     String _id,activity_id,job_detail_id;
-
 
     String userid,username;
 

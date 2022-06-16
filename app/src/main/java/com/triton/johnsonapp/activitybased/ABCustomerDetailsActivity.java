@@ -3,6 +3,7 @@ package com.triton.johnsonapp.activitybased;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,6 +56,9 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
     private String fromactivity;
     private String fromto;
     private String job_detail_no;
+
+
+
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txt_customer_name)
@@ -142,7 +146,10 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
 
 
         }
-
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("jobid", job_id);
+        editor.apply();
         if(job_id != null){
             txt_job_no.setText("Job No : "+job_detail_no);
         }
@@ -279,8 +286,7 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progroess_popup);
         dialog.show();
-
-        APIInterface apiInterface = RetrofitClient.getClient().create(APIInterface.class);
+         APIInterface apiInterface = RetrofitClient.getClient().create(APIInterface.class);
         Call<JobFetchAddressResponse> call = apiInterface.JobFetchAddressRequestCall(RestUtils.getContentType(), jobFetchAddressRequest());
         Log.w(TAG,"JobFetchAddressRequestCall url  :%s"+" "+ call.request().url().toString());
 

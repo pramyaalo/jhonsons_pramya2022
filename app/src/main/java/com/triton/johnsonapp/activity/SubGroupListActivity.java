@@ -11,19 +11,25 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,16 +38,19 @@ import com.google.gson.Gson;
 import com.triton.johnsonapp.Forms.ImageBasedInputFormActivity;
 import com.triton.johnsonapp.Forms.InputValueFormListActivity;
 import com.triton.johnsonapp.R;
+import com.triton.johnsonapp.activitybased.ABCustomerDetailsActivity;
 import com.triton.johnsonapp.activitybased.ActivityJobListActivity;
 import com.triton.johnsonapp.adapter.FieldListAdapter;
 import com.triton.johnsonapp.adapter.SelectEngineerAdapter;
 import com.triton.johnsonapp.adapter.ServiceListAdapter;
 import com.triton.johnsonapp.api.APIInterface;
 import com.triton.johnsonapp.api.RetrofitClient;
+import com.triton.johnsonapp.requestpojo.JoinInspecCheckStatusRequest;
 import com.triton.johnsonapp.requestpojo.SelectEngineerRequest;
 import com.triton.johnsonapp.requestpojo.SubGroupDetailManagementRequest;
 import com.triton.johnsonapp.responsepojo.FormDataStoreResponse;
 import com.triton.johnsonapp.responsepojo.GetFieldListResponse;
+import com.triton.johnsonapp.responsepojo.JoinInspectionCheckStatusResponse;
 import com.triton.johnsonapp.responsepojo.SelectEnginnerResponse;
 import com.triton.johnsonapp.responsepojo.SubGroupDetailManagementResponse;
 import com.triton.johnsonapp.session.SessionManager;
@@ -65,13 +74,13 @@ public class SubGroupListActivity extends AppCompatActivity {
 
     private final int jsoncode = 1;
     private static ProgressDialog mProgressDialog;
-     private ArrayList<String> names = new ArrayList<String>();
-    private Spinner spinner;
-SelectEngineerAdapter selectEngineerAdapter;
+    private ArrayList<String> names = new ArrayList<String>();
+    Dialog submittedSuccessfulalertdialog;
+    SelectEngineerAdapter selectEngineerAdapter;
 
-    private String TAG ="SubGroupListActivity";
+    private String TAG = "SubGroupListActivity";
 
-    String userid,username;
+    String userid, username;
 
 
     @SuppressLint("NonConstantResourceId")
@@ -91,12 +100,12 @@ SelectEngineerAdapter selectEngineerAdapter;
     @BindView(R.id.txt_no_records)
     TextView txt_no_records;
 
-    Dialog  dialog;
+    Dialog dialog;
     Dialog alertdialog;
-    String networkStatus = "",message,activity_id,job_id,group_id,EmpNo;
+    String networkStatus = "", message, activity_id, job_id, group_id, EmpNo;
     String status;
 
-    int number=0;
+    int number = 0;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.img_back)
@@ -111,20 +120,20 @@ SelectEngineerAdapter selectEngineerAdapter;
     TextView txt_toolbar_title;
 
     public static String responsemessage;
-
+    String Ukey;
 
     SelectEnginnerResponse selectenginnerresponse = new SelectEnginnerResponse();
-     private AlertDialog.Builder alertDialogBuilder;
-    private String search_string ="";
-    private String fromactivity ;
-    private String group_detail_name ;
+    private AlertDialog.Builder alertDialogBuilder;
+    private String search_string = "";
+    private String fromactivity;
+    private String group_detail_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_group_list);
         ButterKnife.bind(this);
-        Log.w(TAG,"Oncreate -->");
+        Log.w(TAG, "Oncreate -->");
         SessionManager session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         userid = user.get(SessionManager.KEY_ID);
@@ -137,21 +146,69 @@ SelectEngineerAdapter selectEngineerAdapter;
             group_id = extras.getString("group_id");
             activity_id = extras.getString("activity_id");
             job_id = extras.getString("job_id");
+            Ukey = extras.getString("UKEY");
             fromactivity = extras.getString("fromactivity");
             group_detail_name = extras.getString("group_detail_name");
-            Log.w(TAG,"activity_id -->"+activity_id);
-            Log.w(TAG,"group_id -->"+group_id);
-            Log.w(TAG,"job_id -->"+job_id);
-            Log.w(TAG,"fromactivity -->"+fromactivity);
-            Log.w(TAG,"group_detail_name -->"+group_detail_name);
-            Log.w(TAG,"status -->"+status);
-
-            if(group_detail_name != null){
-                txt_toolbar_title.setText(""+group_detail_name);
+            Log.w(TAG, "activity_id -->" + activity_id);
+            Log.w(TAG, "group_id -->" + group_id);
+             Log.w(TAG, "job_id -->" + job_id);
+            Log.w(TAG, "fromactivity -->" + fromactivity);
+            Log.w(TAG, "group_detail_name -->" + group_detail_name);
+            Log.w(TAG, "status -->" + status);
+            //joininspectcheckstatus();
+            if (group_detail_name != null) {
+                txt_toolbar_title.setText("" + group_detail_name);
             }
 
         }
+        // Retrieving the value using its keys the file name
+// must be same in both saving and retrieving the data
+        SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
+// The value will be default as empty string because for
+// the very first time when the app is opened, there is nothing to show
+        String s1 = sh.getString("name", "");
+        Log.e("s1",s1);
+
+
+
+
+         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+
+         SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+         myEdit.putString("name",s1);
+        myEdit.commit();
+        SharedPreferences sh1= getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        String submit = sh1.getString("submit", "");
+        Log.e("submit",submit);
+
+// Storing data into SharedPreferences
+        SharedPreferences sharedPreferences2 = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+
+         SharedPreferences.Editor myEdit1 = sharedPreferences2.edit();
+
+        myEdit1.putString("submit", submit);
+
+// Once the changes have been made,
+// we need to commit to apply those changes made,
+// otherwise, it will throw an error
+        myEdit1.commit();
+
+
+        /*if(Ukey!=null && Ukey.equalsIgnoreCase("OP-ACT8S"))
+{
+    btn_submit.setVisibility(View.GONE);
+}*/
+          SharedPreferences sp = getSharedPreferences("myKey",MODE_PRIVATE);
+         SharedPreferences.Editor ed = sp.edit();
+         ed.putString("job_id",job_id);
+        Log.e("jobid",job_id);
+
+// Once the changes have been made,
+// we need to commit to apply those changes made,
+// otherwise, it will throw an error
+        myEdit.commit();
 
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,10 +221,9 @@ SelectEngineerAdapter selectEngineerAdapter;
         networkStatus = ConnectionDetector.getConnectivityStatusString(getApplicationContext());
         if (networkStatus.equalsIgnoreCase("Not connected to Internet")) {
 
-            Toasty.warning(getApplicationContext(),"No Internet",Toasty.LENGTH_LONG).show();
+            Toasty.warning(getApplicationContext(), "No Internet", Toasty.LENGTH_LONG).show();
 
-        }
-        else {
+        } else {
 
             subgroupdetailmanagmentResponseCall();
 
@@ -203,32 +259,118 @@ SelectEngineerAdapter selectEngineerAdapter;
                 return false;
             }
         });
-btn_submit.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        showPopupSelectEngineer();
-    }
-});
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupSelectEngineer();
+            }
+        });
         //SelectEngineerResponseCall();
+        // joininspectcheckstatus();
 
-        }
+    }
+
+    @SuppressLint("LogNotTimber")
+    private void joininspectcheckstatus() {
+        Dialog dialog = new Dialog(SubGroupListActivity.this, R.style.NewProgressDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progroess_popup);
+        dialog.show();
+
+        APIInterface apiInterface = RetrofitClient.getClient().create(APIInterface.class);
+        Call<JoinInspectionCheckStatusResponse> call = apiInterface.JoinInspectionCheckstatusResponseCall(RestUtils.getContentType(), joinInspecCheckStatusRequest());
+        Log.w(TAG, "getjoininspectioncheckstatusrequest url  :%s" + " " + call.request().url().toString());
+
+        call.enqueue(new Callback<JoinInspectionCheckStatusResponse>() {
+            @SuppressLint("LogNotTimber")
+            @Override
+            public void onResponse(@NonNull Call<JoinInspectionCheckStatusResponse> call, @NonNull Response<JoinInspectionCheckStatusResponse> response) {
+
+                Log.w(TAG, "getjoininspectioncheckststusresponse" + new Gson().toJson(response.body()));
+                if (response.body() != null) {
+                    status = response.body().getStatus();
+                    message = response.body().getMessage();
+                    if (200 == response.body().getCode()) {
+                        showSubmittedSuccessful();
+                       // job_id = response.body().getData().getJob_no();
+                       // Ukey = response.body().getData().getUkey();
+                        //userrole = response.body().getData().getUser_number();
+
+
+                    } else {
+                        dialog.dismiss();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JoinInspectionCheckStatusResponse> call, Throwable t) {
+                dialog.dismiss();
+                Log.e(TAG, "--->" + t.getMessage());
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
+
+    }
+
+    private JoinInspecCheckStatusRequest joinInspecCheckStatusRequest() {
+
+
+        JoinInspecCheckStatusRequest joinInspecCheckStatusRequest = new JoinInspecCheckStatusRequest();
+        joinInspecCheckStatusRequest.setJob_no(job_id);
+         joinInspecCheckStatusRequest.setUser_number(userid);
+
+
+        Log.w(TAG, "update_join_inspect_hdr/create_Request " + new Gson().toJson(joinInspecCheckStatusRequest));
+        return joinInspecCheckStatusRequest;
+    }
+
+    private void showSubmittedSuccessful() {
+        Log.w(TAG, "showSubmittedSuccessful -->+");
+        submittedSuccessfulalertdialog = new Dialog(SubGroupListActivity.this);
+        submittedSuccessfulalertdialog.setCancelable(false);
+        submittedSuccessfulalertdialog.setContentView(R.layout.alert_sucess_clear);
+        Button btn_goback = submittedSuccessfulalertdialog.findViewById(R.id.btn_goback);
+        TextView txt_success_msg = submittedSuccessfulalertdialog.findViewById(R.id.txt_success_msg);
+        txt_success_msg.setText("All data submitted successfully.");
+        btn_goback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                submittedSuccessfulalertdialog.dismiss();
+                Intent intent = new Intent(SubGroupListActivity.this, ABCustomerDetailsActivity.class);
+                intent.putExtra("activity_id", activity_id);
+
+                intent.putExtra("job_id", job_id);
+                intent.putExtra("group_id", group_id);
+                intent.putExtra("status", status);
+                intent.putExtra("fromactivity", fromactivity);
+                dialog.dismiss();
+                startActivity(intent);
+                overridePendingTransition(R.anim.new_right, R.anim.new_left);
+                finish();
+
+            }
+        });
+        Objects.requireNonNull(submittedSuccessfulalertdialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        submittedSuccessfulalertdialog.show();
+
+
+    }
+
     private void showPopupSelectEngineer() {
-
-        try {
-            alertdialog = new Dialog(SubGroupListActivity.this);
-            alertdialog.setContentView(R.layout.select_engineer_popup);
-
-            alertdialog.setCancelable(false);
-
-            ImageView img_close = alertdialog.findViewById(R.id.img_close);
+ Intent intent=new Intent(SubGroupListActivity.this,ActivitySelectEngineerPopup.class);
+ startActivity(intent);
 
 
 
 
-            img_close.setOnClickListener(v -> alertdialog.dismiss());
-            Objects.requireNonNull(alertdialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            alertdialog.show();
 
+
+
+    }
 
           /*  img_close.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -240,14 +382,9 @@ btn_submit.setOnClickListener(new View.OnClickListener() {
                     startActivity(intent);
                     overridePendingTransition(R.anim.new_right, R.anim.new_left);
                 }
-            });*/
-            Objects.requireNonNull(alertdialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            alertdialog.show();
 
 
-        } catch (WindowManager.BadTokenException e) {
-            e.printStackTrace();
-        }
+
 
 
 
@@ -328,29 +465,28 @@ btn_submit.setOnClickListener(new View.OnClickListener() {
 
         APIInterface apiInterface = RetrofitClient.getClient().create(APIInterface.class);
         Call<SubGroupDetailManagementResponse> call = apiInterface.subgroupdetailmanagmentResponseCall(RestUtils.getContentType(), SubGroupDetailManagementRequest());
-        Log.w(TAG,"SubGroupDetailManagementResponse url  :%s"+" "+ call.request().url().toString());
+        Log.w(TAG, "SubGroupDetailManagementResponse url  :%s" + " " + call.request().url().toString());
 
         call.enqueue(new Callback<SubGroupDetailManagementResponse>() {
             @SuppressLint("LogNotTimber")
             @Override
             public void onResponse(@NonNull Call<SubGroupDetailManagementResponse> call, @NonNull Response<SubGroupDetailManagementResponse> response) {
 
-                Log.w(TAG,"SubGroupDetailManagementResponse" + new Gson().toJson(response.body()));
+                Log.w(TAG, "SubGroupDetailManagementResponse" + new Gson().toJson(response.body()));
                 if (response.body() != null) {
                     message = response.body().getMessage();
                     if (200 == response.body().getCode()) {
-                        if(response.body().getData() != null){
+                        if (response.body().getData() != null) {
 
                             dialog.dismiss();
                             List<SubGroupDetailManagementResponse.DataBean> dataBeanList = response.body().getData();
 
 
-                            if(dataBeanList != null && dataBeanList.size()>0){
+                            if (dataBeanList != null && dataBeanList.size() > 0) {
                                 rv_subgrouplist.setVisibility(View.VISIBLE);
                                 setView(dataBeanList);
                                 txt_no_records.setVisibility(View.GONE);
-                            }
-                           else  {
+                            } else {
                                 rv_subgrouplist.setVisibility(View.GONE);
                                 txt_no_records.setVisibility(View.VISIBLE);
                                 txt_no_records.setText("No Sub-Groups Available");
@@ -361,7 +497,7 @@ btn_submit.setOnClickListener(new View.OnClickListener() {
 
                     } else {
                         dialog.dismiss();
-                        Toasty.warning(getApplicationContext(),""+message,Toasty.LENGTH_LONG).show();
+                        Toasty.warning(getApplicationContext(), "" + message, Toasty.LENGTH_LONG).show();
 
                         //showErrorLoading(response.body().getMessage());
                     }
@@ -381,15 +517,15 @@ btn_submit.setOnClickListener(new View.OnClickListener() {
 
     }
 
-    private SelectEngineerRequest selectEngineerRequest()
-    {
-       /* "EMPNO": "E9814",*/
+    private SelectEngineerRequest selectEngineerRequest() {
+        /* "EMPNO": "E9814",*/
 
-        SelectEngineerRequest selectEngineerRequest=new SelectEngineerRequest();
+        SelectEngineerRequest selectEngineerRequest = new SelectEngineerRequest();
         selectEngineerRequest.setJob_id(job_id);
-        Log.w(TAG,"selectEngineerRequest "+ new Gson().toJson(selectEngineerRequest));
+        Log.w(TAG, "selectEngineerRequest " + new Gson().toJson(selectEngineerRequest));
         return selectEngineerRequest;
     }
+
     private SubGroupDetailManagementRequest SubGroupDetailManagementRequest() {
         /*
          * group_id : 61c1e5e09934282617679543
@@ -398,14 +534,15 @@ btn_submit.setOnClickListener(new View.OnClickListener() {
         SubGroupDetailManagementRequest SubGroupDetailManagementRequest = new SubGroupDetailManagementRequest();
         SubGroupDetailManagementRequest.setGroup_id(group_id);
         SubGroupDetailManagementRequest.setSearch_string(search_string);
-        Log.w(TAG,"SubGroupDetailManagementRequest "+ new Gson().toJson(SubGroupDetailManagementRequest));
+        Log.w(TAG, "SubGroupDetailManagementRequest " + new Gson().toJson(SubGroupDetailManagementRequest));
         return SubGroupDetailManagementRequest;
     }
+
     @SuppressLint("LogNotTimber")
     private void setView(List<SubGroupDetailManagementResponse.DataBean> dataBeanList) {
-        rv_subgrouplist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        rv_subgrouplist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv_subgrouplist.setItemAnimator(new DefaultItemAnimator());
-        ServiceListAdapter serviceListAdapter = new ServiceListAdapter(this, dataBeanList,activity_id,job_id, group_id,TAG,status);
+        ServiceListAdapter serviceListAdapter = new ServiceListAdapter(this, dataBeanList, activity_id, job_id, group_id, TAG, status);
         rv_subgrouplist.setAdapter(serviceListAdapter);
     }
 

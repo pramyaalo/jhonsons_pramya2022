@@ -58,7 +58,7 @@
                 android:fontFamily="@font/sourcesanspro_regular"/>
 
             <TextView
-                android:id="@+id/txt_success_msg"
+                android:id="@+id/txt_clear_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -71,7 +71,9 @@
                 android:textSize="18sp"
                 android:textStyle="normal"
                 android:fontFamily="@font/sourcesanspro_regular"/>
-
+<Space
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
