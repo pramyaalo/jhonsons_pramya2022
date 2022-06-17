@@ -104,7 +104,7 @@ public class SubGroupListActivity extends AppCompatActivity {
     Dialog alertdialog;
     String networkStatus = "", message, activity_id, job_id, group_id, EmpNo;
     String status;
-
+String work_status;
     int number = 0;
 
     @SuppressLint("NonConstantResourceId")
@@ -121,13 +121,13 @@ public class SubGroupListActivity extends AppCompatActivity {
 
     public static String responsemessage;
     String Ukey;
-
+    String submit;
     SelectEnginnerResponse selectenginnerresponse = new SelectEnginnerResponse();
     private AlertDialog.Builder alertDialogBuilder;
     private String search_string = "";
     private String fromactivity;
     private String group_detail_name;
-
+    String pending;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,11 +147,12 @@ public class SubGroupListActivity extends AppCompatActivity {
             activity_id = extras.getString("activity_id");
             job_id = extras.getString("job_id");
             Ukey = extras.getString("UKEY");
+              work_status=extras.getString("work_status");
             fromactivity = extras.getString("fromactivity");
             group_detail_name = extras.getString("group_detail_name");
             Log.w(TAG, "activity_id -->" + activity_id);
             Log.w(TAG, "group_id -->" + group_id);
-             Log.w(TAG, "job_id -->" + job_id);
+            Log.w(TAG, "job_id -->" + job_id);
             Log.w(TAG, "fromactivity -->" + fromactivity);
             Log.w(TAG, "group_detail_name -->" + group_detail_name);
             Log.w(TAG, "status -->" + status);
@@ -167,28 +168,41 @@ public class SubGroupListActivity extends AppCompatActivity {
 
 // The value will be default as empty string because for
 // the very first time when the app is opened, there is nothing to show
+
         String s1 = sh.getString("name", "");
-        Log.e("s1",s1);
+        Log.e("s1", s1);
 
 
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
-         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
 
-         SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
-         myEdit.putString("name",s1);
+        myEdit.putString("name", s1);
         myEdit.commit();
-        SharedPreferences sh1= getSharedPreferences("MySharedPref", MODE_PRIVATE);
-        String submit = sh1.getString("submit", "");
-        Log.e("submit",submit);
+        SharedPreferences sh1 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+
+      submit  = sh1.getString("submit", "");
+        Log.e("submit", submit);
+
+        SharedPreferences sh2 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        pending="";
+     pending   = sh2.getString("submit", "");
+        Log.e("pending", pending);
 
 // Storing data into SharedPreferences
-        SharedPreferences sharedPreferences2 = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+        SharedPreferences sharedPreferences2 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
-         SharedPreferences.Editor myEdit1 = sharedPreferences2.edit();
+        SharedPreferences.Editor myEdit1 = sharedPreferences2.edit();
 
         myEdit1.putString("submit", submit);
+
+        SharedPreferences sharedPreferences3 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+
+        SharedPreferences.Editor myEdit4 = sharedPreferences3.edit();
+
+        myEdit4.putString("pending", submit);
+
 
 // Once the changes have been made,
 // we need to commit to apply those changes made,
@@ -196,14 +210,13 @@ public class SubGroupListActivity extends AppCompatActivity {
         myEdit1.commit();
 
 
-        /*if(Ukey!=null && Ukey.equalsIgnoreCase("OP-ACT8S"))
-{
-    btn_submit.setVisibility(View.GONE);
-}*/
-          SharedPreferences sp = getSharedPreferences("myKey",MODE_PRIVATE);
-         SharedPreferences.Editor ed = sp.edit();
-         ed.putString("job_id",job_id);
-        Log.e("jobid",job_id);
+        if (Ukey != null && Ukey.equalsIgnoreCase("OP-ACT8S")) {
+            btn_submit.setVisibility(View.GONE);
+        }
+        SharedPreferences sp = getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putString("job_id", job_id);
+        Log.e("jobid", job_id);
 
 // Once the changes have been made,
 // we need to commit to apply those changes made,
@@ -292,8 +305,8 @@ public class SubGroupListActivity extends AppCompatActivity {
                     message = response.body().getMessage();
                     if (200 == response.body().getCode()) {
                         showSubmittedSuccessful();
-                       // job_id = response.body().getData().getJob_no();
-                       // Ukey = response.body().getData().getUkey();
+                        // job_id = response.body().getData().getJob_no();
+                        // Ukey = response.body().getData().getUkey();
                         //userrole = response.body().getData().getUser_number();
 
 
@@ -321,7 +334,7 @@ public class SubGroupListActivity extends AppCompatActivity {
 
         JoinInspecCheckStatusRequest joinInspecCheckStatusRequest = new JoinInspecCheckStatusRequest();
         joinInspecCheckStatusRequest.setJob_no(job_id);
-         joinInspecCheckStatusRequest.setUser_number(userid);
+        joinInspecCheckStatusRequest.setUser_number(userid);
 
 
         Log.w(TAG, "update_join_inspect_hdr/create_Request " + new Gson().toJson(joinInspecCheckStatusRequest));
@@ -361,13 +374,8 @@ public class SubGroupListActivity extends AppCompatActivity {
     }
 
     private void showPopupSelectEngineer() {
- Intent intent=new Intent(SubGroupListActivity.this,ActivitySelectEngineerPopup.class);
- startActivity(intent);
-
-
-
-
-
+        Intent intent = new Intent(SubGroupListActivity.this, ActivitySelectEngineerPopup.class);
+        startActivity(intent);
 
 
     }
@@ -542,7 +550,7 @@ public class SubGroupListActivity extends AppCompatActivity {
     private void setView(List<SubGroupDetailManagementResponse.DataBean> dataBeanList) {
         rv_subgrouplist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv_subgrouplist.setItemAnimator(new DefaultItemAnimator());
-        ServiceListAdapter serviceListAdapter = new ServiceListAdapter(this, dataBeanList, activity_id, job_id, group_id, TAG, status);
+        ServiceListAdapter serviceListAdapter = new ServiceListAdapter(this, dataBeanList, activity_id, job_id, group_id, TAG, status,work_status);
         rv_subgrouplist.setAdapter(serviceListAdapter);
     }
 
