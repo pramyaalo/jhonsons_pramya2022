@@ -1,8 +1,11 @@
 package com.triton.johnsonapp.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,9 +123,14 @@ public class ABJobDetailListAdapter extends  RecyclerView.Adapter<RecyclerView.V
             intent.putExtra("UKEY_DESC",UKEY_DESC);
             intent.putExtra("new_count",new_count);
             intent.putExtra("pause_count",pause_count);
-
             context.startActivity(intent);
 
+
+            SharedPreferences sp1 =context.getSharedPreferences("myKey", MODE_PRIVATE);
+            SharedPreferences.Editor ed = sp1.edit();
+            ed.putInt("formtypeval", form_type);
+            Log.e("formtypeval", String.valueOf(form_type));
+            ed.commit();
 
 
         });

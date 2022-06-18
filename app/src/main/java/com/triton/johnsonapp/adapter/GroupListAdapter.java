@@ -1,8 +1,11 @@
 package com.triton.johnsonapp.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,6 +128,12 @@ public class GroupListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
                         intent.putExtra("form_type",form_type);
                         intent.putExtra("fromactivity",fromactivity);
                         context.startActivity(intent);
+
+                        SharedPreferences sp =context.getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                        SharedPreferences.Editor myEdi1 = sp.edit();
+                        myEdi1.putInt("form_type", form_type);
+                        Log.e("form_typeee", String.valueOf(form_type));
+                        myEdi1.commit();
                     }
                     else if(dataBeanList.get(position).getForm_type().equals("2")){
                         Intent intent = new Intent(context, ImageBasedInputFormActivity.class);

@@ -138,10 +138,10 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
         Log.w(TAG,"CURRENTITEM-----"+currentItem.getField_length());
 
         int startItem=currentPage*ITEMS_PER_PAGE+position;
-if(key.equalsIgnoreCase("OP-ACT8"))
+/*if(key.equalsIgnoreCase("OP-ACT8"))
 {
 
-}
+}*/
 //        Log.w(TAG,"currentItem startItem "+startItem);
 //
 //        Log.w(TAG,"currentItem POS "+position);
@@ -434,7 +434,7 @@ holder.cv_root.setVisibility(View.GONE);
                                     }
                                     String val=holder.spr_dropdown.getSelectedItem().toString();
                                     Log.e("val",val);
-                                    Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
 
                                 }
                                 public void onNothingSelected(AdapterView<?> parent) {
@@ -460,7 +460,7 @@ holder.cv_root.setVisibility(View.GONE);
                                     }
                                     String val=holder.spr_dropdown.getSelectedItem().toString();
                                     Log.e("val",val);
-                                    Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
                                 }
                                 public void onNothingSelected(AdapterView<?> parent) {
 
@@ -520,7 +520,7 @@ holder.cv_root.setVisibility(View.GONE);
                                 }
                                 String val=holder.spr_dropdown.getSelectedItem().toString();
                                 Log.e("val",val);
-                                Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
 
 
 
@@ -549,7 +549,7 @@ holder.cv_root.setVisibility(View.GONE);
                                 }
                                 String  label1 = String.valueOf(holder.spr_dropdown.getSelectedItem());
                                 Log.e("lable", label1);
-                                Toast.makeText(context.getApplicationContext(),label1, Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(context.getApplicationContext(),label1, Toast.LENGTH_SHORT).show();
                             }
                             public void onNothingSelected(AdapterView<?> parent) {
 
