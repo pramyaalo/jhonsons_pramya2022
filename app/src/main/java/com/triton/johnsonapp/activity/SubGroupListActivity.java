@@ -100,10 +100,6 @@ public class SubGroupListActivity extends AppCompatActivity {
     @BindView(R.id.txt_no_records)
     TextView txt_no_records;
 
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.txt_job_no)
-    TextView txt_job_no;
-
     Dialog dialog;
     Dialog alertdialog;
     String networkStatus = "", message, activity_id, job_id, group_id, EmpNo;
@@ -132,8 +128,6 @@ String work_status;
     private String fromactivity;
     private String group_detail_name;
     String pending;
-    private String job_detail_no;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,8 +139,6 @@ String work_status;
         userid = user.get(SessionManager.KEY_ID);
 
         username = user.get(SessionManager.KEY_USERNAME);
-
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -161,26 +153,14 @@ String work_status;
             Log.w(TAG, "activity_id -->" + activity_id);
             Log.w(TAG, "group_id -->" + group_id);
             Log.w(TAG, "job_id -->" + job_id);
-            Log.w(TAG,"ukey" +Ukey);
             Log.w(TAG, "fromactivity -->" + fromactivity);
             Log.w(TAG, "group_detail_name -->" + group_detail_name);
             Log.w(TAG, "status -->" + status);
-            Log.w(TAG, "workstatusss -->" + work_status);
-
-             SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-              SharedPreferences.Editor myEdit = sharedPreferences.edit();
-              myEdit.putString("UKEY",Ukey);
-               myEdit.commit();
-
-
             //joininspectcheckstatus();
             if (group_detail_name != null) {
                 txt_toolbar_title.setText("" + group_detail_name);
             }
 
-        }
-        if(job_id != null){
-            txt_job_no.setText("Job No : "+job_id);
         }
         // Retrieving the value using its keys the file name
 // must be same in both saving and retrieving the data
@@ -192,10 +172,7 @@ String work_status;
         String s1 = sh.getString("name", "");
         Log.e("s1", s1);
 
-        SharedPreferences sp = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-        SharedPreferences.Editor myEdi1 = sp.edit();
-        myEdi1.putString("jobid", job_id);
-        myEdi1.commit();
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
@@ -203,6 +180,10 @@ String work_status;
 
         myEdit.putString("name", s1);
         myEdit.commit();
+        SharedPreferences sh1 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+
+      submit  = sh1.getString("submit", "");
+        Log.e("submit", submit);
 
         SharedPreferences sh2 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         pending="";
@@ -232,17 +213,21 @@ String work_status;
         if (Ukey != null && Ukey.equalsIgnoreCase("OP-ACT8S")) {
             btn_submit.setVisibility(View.GONE);
         }
-        SharedPreferences sp1 = getSharedPreferences("myKey", MODE_PRIVATE);
-        SharedPreferences.Editor ed = sp1.edit();
+        SharedPreferences sp = getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
         ed.putString("job_id", job_id);
         Log.e("jobid", job_id);
+
+// Once the changes have been made,
+// we need to commit to apply those changes made,
+// otherwise, it will throw an error
         myEdit.commit();
 
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-            finish();
+                onBackPressed();
             }
         });
 

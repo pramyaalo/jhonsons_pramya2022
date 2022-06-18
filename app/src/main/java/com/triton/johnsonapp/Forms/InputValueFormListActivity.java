@@ -247,7 +247,7 @@ public class InputValueFormListActivity extends AppCompatActivity implements Get
     private String S_Ukey;
     private String key;
     String s2;
-    String s_status;
+    String s3;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -257,15 +257,16 @@ public class InputValueFormListActivity extends AppCompatActivity implements Get
 
         ButterKnife.bind(this);
 
+        // Retrieving the value using its keys the file name
+        SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
+        s2 = sh.getString("name", "");
+        Log.e("s2", s2);
 
+        SharedPreferences sh1 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
-        SharedPreferences sh1 = getSharedPreferences("mykey", MODE_PRIVATE);
-
-        s_status = sh1.getString("work_status", "");
-        Log.e("s3", s_status);
-
-
+        s3 = sh1.getString("submit", "");
+        Log.e("s3", s3);
 
         SharedPreferences sh2 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
@@ -275,27 +276,6 @@ public class InputValueFormListActivity extends AppCompatActivity implements Get
         SharedPreferences sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
         key = sharedPreferences.getString("ukey", "");
         Log.e("ukey", key);
-
-       /* if(s_status=="ESubmitted")
-        {
-            if(key!=null && key.equalsIgnoreCase("OP-ACT8"))
-            {
-                if(work_status.equalsIgnoreCase("ESubmitted"))
-                {
-                    showSubmittedSuccessful();
-                }
-            }
-        }*/
-
-        if(s_status.equals("ESubmitted"))
-        {
-            showSubmittedSuccessful();
-        }
-        else
-        {
-
-        }
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             service_id = extras.getString("service_id");
@@ -343,7 +323,6 @@ public class InputValueFormListActivity extends AppCompatActivity implements Get
         getIntPreferences(getApplicationContext(),"submit");
        /* if (key!=null && key.equalsIgnoreCase("OP-ACT8")) {
 
-
             if (work_status!=null && work_status.equalsIgnoreCase("ESubmitted") || work_status.equalsIgnoreCase("Submitted")) {
                 showSubmittedSuccessful();
             }
@@ -352,7 +331,8 @@ public class InputValueFormListActivity extends AppCompatActivity implements Get
             if (work_status!=null && work_status.equalsIgnoreCase("Submitted")) {
                 showSubmittedSuccessful();
             }
-        }*/
+        }
+*/
         if (fromactivity != null && fromactivity.equalsIgnoreCase("ABCustomerDetailsActivity")) {
             if (UKEY_DESC != null) {
                 txt_toolbar_title.setText(UKEY_DESC);
@@ -656,7 +636,11 @@ public class InputValueFormListActivity extends AppCompatActivity implements Get
                             if (key.equalsIgnoreCase("OP-ACT8")) {
                                 work_status = "ESubmitted";
 
-
+                                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                                myEdit.putString("name", work_status);
+                                Log.e("aaaaa", work_status);
+                                myEdit.commit();
 
                             }
 
@@ -673,7 +657,7 @@ public class InputValueFormListActivity extends AppCompatActivity implements Get
                     } else {
                         Toast toast = Toast.makeText(getApplicationContext(), "please enter all required data", Toast.LENGTH_SHORT);
                         toast.setGravity(Gravity.CENTER, 0, 0);
-                       // toast.getView().setBackgroundTintList(ColorStateList.valueOf(R.color.warning));
+                        toast.getView().setBackgroundTintList(ColorStateList.valueOf(R.color.warning));
                         toast.show();
                     }
 
