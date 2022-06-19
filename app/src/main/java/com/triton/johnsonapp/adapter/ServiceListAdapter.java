@@ -109,6 +109,7 @@ public class ServiceListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewH
                     intent.putExtra("subgroup_id",dataBeanList.get(position).get_id());
                     intent.putExtra("fromactivity",fromactivity);
                     intent.putExtra("status",status);
+                    intent.putExtra("work_status",work_status);
                     intent.putExtra("sub_group_detail_name",dataBeanList.get(position).getSub_group_detail_name());
                     context.startActivity(intent);
 
