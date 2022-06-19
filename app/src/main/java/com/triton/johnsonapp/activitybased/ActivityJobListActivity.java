@@ -165,9 +165,17 @@ public class ActivityJobListActivity extends AppCompatActivity implements OnMapR
 
             Log.w(TAG,"ukey"+UKEY);
             pause_count = extras.getInt("pause_count");
+
+            SharedPreferences sharedPref1= getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPref1.edit();
+            edit.putString("UKEY",UKEY );
+            Log.e("keyyyyyyyy",  UKEY);
+            edit.apply();
+
             SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("ukey",UKEY );
+            editor.putInt("form_type",form_type );
+            Log.e("formmm", String.valueOf(form_type));
             editor.apply();
             Log.w(TAG,"activity_id -->"+activity_id+" status : "+status);
 
@@ -251,6 +259,12 @@ public class ActivityJobListActivity extends AppCompatActivity implements OnMapR
         intent.putExtra("pause_count",pause_count);
         startActivity(intent);
         overridePendingTransition(R.anim.new_right, R.anim.new_left);
+
+        SharedPreferences sp1 = getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp1.edit();
+        ed.putString("status", status);
+        Log.e("statusssssssssss", status);
+        ed.commit();
 
 
     }

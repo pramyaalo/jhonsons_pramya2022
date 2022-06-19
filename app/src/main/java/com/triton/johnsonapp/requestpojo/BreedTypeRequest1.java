@@ -7,7 +7,7 @@ public class BreedTypeRequest1 {
      */
 
     private String job_id;
-
+private String Name;
 
     public String getJob_id() {
         return job_id;
@@ -17,4 +17,14 @@ public class BreedTypeRequest1 {
         this.job_id = job_id;
 
     }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+
+    }
+
 }

@@ -91,7 +91,7 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
     public static String Customeraddress;
     private String UKEY;
     private String UKEY_DESC;
-    private int form_type = 0;
+    private int form_type;
 
     private int new_count;
     private int pause_count;
@@ -124,6 +124,11 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences sharedPreferences = getSharedPreferences("mykey", MODE_PRIVATE);
+        int form_type1  = sharedPreferences.getInt("form_type", 0);
+        Log.e("formtypeval", String.valueOf(form_type1));
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             activity_id = extras.getString("activity_id");
@@ -135,6 +140,7 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
             fromto = extras.getString("fromto");
             job_detail_no = extras.getString("job_detail_no");
             UKEY = extras.getString("UKEY");
+            Log.w(TAG,"UKEYyy -->"+UKEY);
             UKEY_DESC = extras.getString("UKEY_DESC");
             form_type = extras.getInt("form_type");
             Log.w(TAG,"form_type -->"+form_type);
@@ -232,11 +238,15 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
                     intent.putExtra("status",status);
                     intent.putExtra("fromactivity",TAG);
                     intent.putExtra("UKEY",UKEY);
+                    Log.w(TAG,"UKEY1yy" +UKEY);
                     intent.putExtra("UKEY_DESC",UKEY_DESC);
                     intent.putExtra("job_detail_no",job_detail_no);
                     intent.putExtra("new_count",new_count);
                     intent.putExtra("pause_count",pause_count);
                    startActivity(intent);
+
+
+
                 }
                 else if(form_type == 5){
                     Intent intent = new Intent(getApplicationContext(), InputFormFiveActivity.class);
@@ -273,6 +283,7 @@ public class ABCustomerDetailsActivity extends AppCompatActivity {
         intent.putExtra("activity_id",activity_id);
         intent.putExtra("status",status);
         intent.putExtra("UKEY",UKEY);
+        intent.putExtra("form_type",form_type);
         intent.putExtra("new_count",new_count);
         intent.putExtra("pause_count",pause_count);
         startActivity(intent);
