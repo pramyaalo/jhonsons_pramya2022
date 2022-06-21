@@ -138,10 +138,10 @@ public class FieldListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHol
         Log.w(TAG,"CURRENTITEM-----"+currentItem.getField_length());
 
         int startItem=currentPage*ITEMS_PER_PAGE+position;
-if(key.equalsIgnoreCase("OP-ACT8"))
+/*if(key.equalsIgnoreCase("OP-ACT8"))
 {
 
-}
+}*/
 //        Log.w(TAG,"currentItem startItem "+startItem);
 //
 //        Log.w(TAG,"currentItem POS "+position);
@@ -275,16 +275,7 @@ holder.cv_root.setVisibility(View.GONE);
                 //Log.w(TAG,"responsemessage : "+InputValueFormListActivity.responsemessage );
 
                 if(InputValueFormListActivity.responsemessage != null && InputValueFormListActivity.responsemessage.equalsIgnoreCase("Joininspection")){
-                    if(key!=null && key.equalsIgnoreCase("OP-ACT8"))
-                    {
-                        if(currentItem.getField_value() != null && !currentItem.getField_value().equalsIgnoreCase("OK")) {
-                            holder.cv_root.setVisibility(View.GONE);
-                          }
-                        else
-                        {
-                            holder.cv_root.setVisibility(View.GONE);
-                        }
-                    }
+
 
                     if(key != null && key.equalsIgnoreCase("OP-ACT8")){
                             arrayListdropdown =  currentItem.getDrop_down();
@@ -331,15 +322,21 @@ holder.cv_root.setVisibility(View.GONE);
                                             getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                         }
-                                        String val=holder.spr_dropdown.getSelectedItem().toString();
-                                        Log.e("val",val);
-                                        if(val.equals("OK"))
+                                        String Valuee=holder.spr_dropdown.getSelectedItem().toString();
+                                        Log.e("val",Valuee);
+                                        if(Valuee.equals("OK"))
                                         {
                                            // holder.cv_root.setEnabled(false);
                                             holder.spr_dropdown.setEnabled(false);
                                             holder.cv_root.setCardBackgroundColor(Color.LTGRAY);
 
                                         }
+                                        SharedPreferences sharedPref =context.getSharedPreferences("name", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("Valuee", Valuee);
+                                        editor.commit();
+
+
                                        // Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
 
                                     }
@@ -432,9 +429,8 @@ holder.cv_root.setVisibility(View.GONE);
                                         getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                     }
-                                    String val=holder.spr_dropdown.getSelectedItem().toString();
-                                    Log.e("val",val);
-                                    Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+
+                                   // Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
 
                                 }
                                 public void onNothingSelected(AdapterView<?> parent) {
@@ -458,9 +454,8 @@ holder.cv_root.setVisibility(View.GONE);
                                         getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                     }
-                                    String val=holder.spr_dropdown.getSelectedItem().toString();
-                                    Log.e("val",val);
-                                    Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+
+                                    //Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
                                 }
                                 public void onNothingSelected(AdapterView<?> parent) {
 
@@ -518,9 +513,8 @@ holder.cv_root.setVisibility(View.GONE);
                                     getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                 }
-                                String val=holder.spr_dropdown.getSelectedItem().toString();
-                                Log.e("val",val);
-                                Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
+
+                                //Toast.makeText(context.getApplicationContext(),val, Toast.LENGTH_SHORT).show();
 
 
 
@@ -547,9 +541,8 @@ holder.cv_root.setVisibility(View.GONE);
                                     getSpinnerListener.getSpinnerListener(holder.spr_dropdown,startItem,parent.getItemAtPosition(pos).toString(),currentItem.getField_length());
 
                                 }
-                                String  label1 = String.valueOf(holder.spr_dropdown.getSelectedItem());
-                                Log.e("lable", label1);
-                                Toast.makeText(context.getApplicationContext(),label1, Toast.LENGTH_SHORT).show();
+
+                               // Toast.makeText(context.getApplicationContext(),label1, Toast.LENGTH_SHORT).show();
                             }
                             public void onNothingSelected(AdapterView<?> parent) {
 
