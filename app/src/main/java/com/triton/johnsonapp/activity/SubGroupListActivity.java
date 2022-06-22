@@ -100,11 +100,15 @@ public class SubGroupListActivity extends AppCompatActivity {
     @BindView(R.id.txt_no_records)
     TextView txt_no_records;
 
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.txt_job_no)
+    TextView txt_job_no;
+
     Dialog dialog;
     Dialog alertdialog;
-    String networkStatus = "", message, activity_id, job_id, group_id, EmpNo;
+    String networkStatus = "", message, activity_id, job_id, group_id, EmpNo, fromto, Ukey_desk, form_type, Customer_address;
     String status;
-
+    String work_status;
     int number = 0;
 
     @SuppressLint("NonConstantResourceId")
@@ -121,12 +125,14 @@ public class SubGroupListActivity extends AppCompatActivity {
 
     public static String responsemessage;
     String Ukey;
-
+    String submit;
     SelectEnginnerResponse selectenginnerresponse = new SelectEnginnerResponse();
     private AlertDialog.Builder alertDialogBuilder;
     private String search_string = "";
     private String fromactivity;
     private String group_detail_name;
+    String pending;
+    private String job_detail_no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +146,8 @@ public class SubGroupListActivity extends AppCompatActivity {
 
         username = user.get(SessionManager.KEY_USERNAME);
 
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             status = extras.getString("status");
@@ -147,19 +155,43 @@ public class SubGroupListActivity extends AppCompatActivity {
             activity_id = extras.getString("activity_id");
             job_id = extras.getString("job_id");
             Ukey = extras.getString("UKEY");
+            work_status = extras.getString("work_status");
             fromactivity = extras.getString("fromactivity");
             group_detail_name = extras.getString("group_detail_name");
             Log.w(TAG, "activity_id -->" + activity_id);
             Log.w(TAG, "group_id -->" + group_id);
-             Log.w(TAG, "job_id -->" + job_id);
+            Log.w(TAG, "job_id -->" + job_id);
+            Log.w(TAG, "ukey.int" + Ukey);
             Log.w(TAG, "fromactivity -->" + fromactivity);
             Log.w(TAG, "group_detail_name -->" + group_detail_name);
             Log.w(TAG, "status -->" + status);
+            Log.w(TAG, "caddress -->" + Customer_address);
+            Log.w(TAG, "workstatusss -->" + work_status);
+
+            SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+            SharedPreferences.Editor myEdit = sharedPreferences.edit();
+            myEdit.putString("UKEY", Ukey);
+            myEdit.commit();
+
+            SharedPreferences sharedPreferences4 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+            SharedPreferences.Editor myEdit4 = sharedPreferences4.edit();
+            myEdit4.putString("work_s", work_status);
+            myEdit4.commit();
+            Log.w(TAG, "worksttusss -->" + work_status);
+
+
             //joininspectcheckstatus();
-            if (group_detail_name != null) {
-                txt_toolbar_title.setText("" + group_detail_name);
+            if (Ukey.equals("OP-ACT8")) {
+                txt_toolbar_title.setText("Joint Inspection-Testing");
             }
 
+            if (Ukey.equals("OP-ACT8S")) {
+                txt_toolbar_title.setText("Joint Inspection-Service");
+            }
+
+        }
+        if (job_id != null) {
+            txt_job_no.setText("Job No : " + job_id);
         }
         // Retrieving the value using its keys the file name
 // must be same in both saving and retrieving the data
@@ -167,47 +199,30 @@ public class SubGroupListActivity extends AppCompatActivity {
 
 // The value will be default as empty string because for
 // the very first time when the app is opened, there is nothing to show
+
         String s1 = sh.getString("name", "");
-        Log.e("s1",s1);
+        Log.e("s1", s1);
 
+        SharedPreferences sp = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        SharedPreferences.Editor myEdi1 = sp.edit();
+        myEdi1.putString("jobid", job_id);
+        myEdi1.commit();
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
 
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
 
-         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-
-         SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
-         myEdit.putString("name",s1);
+        myEdit.putString("name", s1);
         myEdit.commit();
-        SharedPreferences sh1= getSharedPreferences("MySharedPref", MODE_PRIVATE);
-        String submit = sh1.getString("submit", "");
-        Log.e("submit",submit);
-
-// Storing data into SharedPreferences
-        SharedPreferences sharedPreferences2 = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-
-         SharedPreferences.Editor myEdit1 = sharedPreferences2.edit();
-
-        myEdit1.putString("submit", submit);
-
-// Once the changes have been made,
-// we need to commit to apply those changes made,
-// otherwise, it will throw an error
-        myEdit1.commit();
 
 
-        /*if(Ukey!=null && Ukey.equalsIgnoreCase("OP-ACT8S"))
-{
-    btn_submit.setVisibility(View.GONE);
-}*/
-          SharedPreferences sp = getSharedPreferences("myKey",MODE_PRIVATE);
-         SharedPreferences.Editor ed = sp.edit();
-         ed.putString("job_id",job_id);
-        Log.e("jobid",job_id);
-
-// Once the changes have been made,
-// we need to commit to apply those changes made,
-// otherwise, it will throw an error
+        if (Ukey != null && Ukey.equalsIgnoreCase("OP-ACT8S")) {
+            btn_submit.setVisibility(View.GONE);
+        }
+        SharedPreferences sp1 = getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp1.edit();
+        ed.putString("job_id", job_id);
+        Log.e("jobid", job_id);
         myEdit.commit();
 
         img_back.setOnClickListener(new View.OnClickListener() {
@@ -292,8 +307,8 @@ public class SubGroupListActivity extends AppCompatActivity {
                     message = response.body().getMessage();
                     if (200 == response.body().getCode()) {
                         showSubmittedSuccessful();
-                       // job_id = response.body().getData().getJob_no();
-                       // Ukey = response.body().getData().getUkey();
+                        // job_id = response.body().getData().getJob_no();
+                        // Ukey = response.body().getData().getUkey();
                         //userrole = response.body().getData().getUser_number();
 
 
@@ -321,7 +336,7 @@ public class SubGroupListActivity extends AppCompatActivity {
 
         JoinInspecCheckStatusRequest joinInspecCheckStatusRequest = new JoinInspecCheckStatusRequest();
         joinInspecCheckStatusRequest.setJob_no(job_id);
-         joinInspecCheckStatusRequest.setUser_number(userid);
+        joinInspecCheckStatusRequest.setUser_number(userid);
 
 
         Log.w(TAG, "update_join_inspect_hdr/create_Request " + new Gson().toJson(joinInspecCheckStatusRequest));
@@ -360,14 +375,24 @@ public class SubGroupListActivity extends AppCompatActivity {
 
     }
 
+    public void OnBackPressed() {
+        if (fromactivity != null && fromactivity.equalsIgnoreCase("CustomerDetailsActivity")) {
+            Intent intent = new Intent(SubGroupListActivity.this, ABCustomerDetailsActivity.class);
+            intent.putExtra("activity_id", activity_id);
+            intent.putExtra("job_id", job_id);
+            intent.putExtra("status", status);
+            intent.putExtra("job_detail_no", job_detail_no);
+            intent.putExtra("fromto", fromto);
+            startActivity(intent);
+            overridePendingTransition(R.anim.new_right, R.anim.new_left);
+
+
+        }
+    }
+
     private void showPopupSelectEngineer() {
- Intent intent=new Intent(SubGroupListActivity.this,ActivitySelectEngineerPopup.class);
- startActivity(intent);
-
-
-
-
-
+        Intent intent = new Intent(SubGroupListActivity.this, ActivitySelectEngineerPopup.class);
+        startActivity(intent);
 
 
     }
@@ -542,7 +567,7 @@ public class SubGroupListActivity extends AppCompatActivity {
     private void setView(List<SubGroupDetailManagementResponse.DataBean> dataBeanList) {
         rv_subgrouplist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv_subgrouplist.setItemAnimator(new DefaultItemAnimator());
-        ServiceListAdapter serviceListAdapter = new ServiceListAdapter(this, dataBeanList, activity_id, job_id, group_id, TAG, status);
+        ServiceListAdapter serviceListAdapter = new ServiceListAdapter(this, dataBeanList, activity_id, job_id, group_id, TAG, status,Ukey, work_status);
         rv_subgrouplist.setAdapter(serviceListAdapter);
     }
 

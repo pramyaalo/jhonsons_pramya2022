@@ -50,6 +50,7 @@ public class CustomerDetailsActivity extends AppCompatActivity {
     private String status;
     private String fromactivity;
     private String fromto;
+    private String UKEY;
     private String job_detail_no;
 
     @SuppressLint("NonConstantResourceId")
@@ -144,7 +145,7 @@ public class CustomerDetailsActivity extends AppCompatActivity {
                 intent.putExtra("activity_id",activity_id);
                 intent.putExtra("job_id",job_id);
                 intent.putExtra("status",status);
-                intent.putExtra("fromactivity",TAG);
+                 intent.putExtra("fromactivity",TAG);
                 intent.putExtra("job_detail_no",job_detail_no);
                 intent.putExtra("fromto",fromactivity);
 

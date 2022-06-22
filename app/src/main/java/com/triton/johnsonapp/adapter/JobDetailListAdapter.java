@@ -3,6 +3,7 @@ package com.triton.johnsonapp.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +33,10 @@ public class JobDetailListAdapter extends  RecyclerView.Adapter<RecyclerView.Vie
 
     private int size;
     String status;
+    private String UKEY;
     String fromactivity;
 
-    public JobDetailListAdapter(Context context, List<JobNoManagementResponse.DataBean> dataBeanList, String status,String fromactivity) {
+    public JobDetailListAdapter(Context context, List<JobNoManagementResponse.DataBean> dataBeanList, String status ,String fromactivity) {
         this.context = context;
         this.dataBeanList = dataBeanList;
         this.fromactivity = fromactivity ;
@@ -95,6 +97,8 @@ public class JobDetailListAdapter extends  RecyclerView.Adapter<RecyclerView.Vie
             intent.putExtra("activity_id",dataBeanList.get(position).getActivedetail__id());
             intent.putExtra("job_id",dataBeanList.get(position).get_id());
             intent.putExtra("status",status);
+            intent.putExtra("UKEY",UKEY);
+            Log.w(TAG,"UKEYYYYY35" +UKEY);
             intent.putExtra("fromactivity",fromactivity);
             intent.putExtra("job_detail_no",dataBeanList.get(position).getJob_detail_no());
 

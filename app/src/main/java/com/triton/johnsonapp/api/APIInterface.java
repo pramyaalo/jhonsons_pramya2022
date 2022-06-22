@@ -114,7 +114,7 @@ public interface APIInterface {
     Call<GetFieldListResponse> getfieldListResponseCall(@Header("Content-Type") String type, @Body GetFieldListRequest getFieldListRequest);
 
     /*joint inspection field screen list*/
-    @POST("joininspection/getlist_id")
+    @POST("joininspection/getlist_id_test")
     Call<GetFieldListResponse> joinInspectionGetFieldListResponseCall(@Header("Content-Type") String type, @Body GetFieldListRequest getFieldListRequest);
 
 
