@@ -37,6 +37,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:extractNativeLibs="true"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
@@ -202,5 +203,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

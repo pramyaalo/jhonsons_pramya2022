@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class StatusActivity extends AppCompatActivity {
     @BindView(R.id.btn_new)
     Button btn_new;
 
+
+
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.ll_logout)
     LinearLayout ll_logout;
@@ -61,7 +64,8 @@ public class StatusActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
-
+        ImageView img_back=(ImageView)findViewById(R.id.img_back);
+        img_back.setVisibility(View.VISIBLE);
         ButterKnife.bind(this);
         Log.w(TAG,"Oncreate -->");
 
@@ -75,7 +79,12 @@ public class StatusActivity extends AppCompatActivity {
                 session.logoutUser();
             }
         });
-
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         btn_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

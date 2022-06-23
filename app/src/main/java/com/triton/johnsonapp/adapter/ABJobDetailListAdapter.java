@@ -1,8 +1,11 @@
 package com.triton.johnsonapp.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -107,22 +110,30 @@ public class ABJobDetailListAdapter extends  RecyclerView.Adapter<RecyclerView.V
         holder.cv_root.setOnClickListener(v -> {
             //Intent intent = new Intent(context, GroupListActivity.class);
             Intent intent = new Intent(context, ABCustomerDetailsActivity.class);
-            intent.putExtra("activity_id",dataBeanList.get(position).getActivedetail__id());
+           // intent.putExtra("activity_id",dataBeanList.get(position).getActivedetail__id());
             //intent.putExtra("group_id",dataBeanList.get(position).getActivedetail__id());
-            intent.putExtra("group_id",activity_id);
-            Log.w(TAG,"group_id---"+activity_id);
+            intent.putExtra("activity_id",activity_id);
+            Log.w(TAG,"activity_id---"+activity_id);
             intent.putExtra("job_id",dataBeanList.get(position).getJob_detail_no());
             intent.putExtra("status",status);
             intent.putExtra("fromactivity",fromactivity);
             intent.putExtra("job_detail_no",dataBeanList.get(position).getJob_detail_no());
             intent.putExtra("form_type",form_type);
+            Log.w(TAG,"form_type56" +form_type);
             intent.putExtra("UKEY",UKEY);
+            Log.w(TAG,"UKEYYYYY" +UKEY);
             intent.putExtra("UKEY_DESC",UKEY_DESC);
+            Log.w(TAG,"UKEYYYYYDESccccccccc" +UKEY_DESC);
+
             intent.putExtra("new_count",new_count);
             intent.putExtra("pause_count",pause_count);
-
             context.startActivity(intent);
 
+
+            SharedPreferences sp1 =context.getSharedPreferences("myKey", MODE_PRIVATE);
+            SharedPreferences.Editor ed = sp1.edit();
+            ed.putInt("formtypeval", form_type);
+             ed.commit();
 
 
         });

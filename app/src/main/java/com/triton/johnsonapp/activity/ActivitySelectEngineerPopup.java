@@ -73,7 +73,7 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
     private String PetBreedType = "";
     @SuppressLint("NonConstantResourceId")
     LinearLayout llpettypeandbreed;
-     private String status;
+    private String status;
     private String message;
     Dialog alertdialog;
     private String search_string = "";
@@ -82,6 +82,7 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
     String string;
     RecyclerView rv_breedtype;
     Button btnSubmit;
+    TextView jobno;
     private String job_no;
     private String activity_ukey;
     private String mobileNo;
@@ -92,28 +93,33 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
     LinearLayout ll_pettype, ll_breedtype;
     String value = "";
 
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.txt_job_no)
+    TextView txt_job_no;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.edt_search)
     EditText edt_search;
     String userid, username;
-
+    String Valueeee;
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.txt_toolbar_title)
     TextView txt_toolbar_title;
+
     protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.select_engineer_popup);
-        ImageView imgback=(ImageView)findViewById(R.id.img_back) ;
+        ImageView imgback = (ImageView) findViewById(R.id.img_back);
         SessionManager session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         userid = user.get(SessionManager.KEY_ID);
-
-        username = user.get(SessionManager.KEY_USERNAME);
-          llpettypeandbreed = (LinearLayout) findViewById(R.id.ll_dropdown);
-        drp_value = findViewById(R.id.spr_dropdown);
         breedTypeResponseByPetIdCall();
+        username = user.get(SessionManager.KEY_USERNAME);
+        llpettypeandbreed = (LinearLayout) findViewById(R.id.ll_dropdown);
+        drp_value = findViewById(R.id.spr_dropdown);
         btnSubmit = (Button) findViewById(R.id.btn_submit);
+        jobno = (TextView) findViewById(R.id.txt_job_no);
+
         networkStatus = ConnectionDetector.getConnectivityStatusString(getApplicationContext());
         if (networkStatus.equalsIgnoreCase("Not connected to Internet")) {
             Toasty.warning(getApplicationContext(), "No Internet", Toasty.LENGTH_LONG).show();
@@ -146,27 +152,41 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
                 return false;
             }
         });*/
-         SharedPreferences sharedpre = getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences sharedpre = getSharedPreferences("myKey", MODE_PRIVATE);
         mobileNo = sharedpre.getString("mobile", "");
         Log.e("mobile", mobileNo);
 
-        SharedPreferences s = getSharedPreferences("myKey", MODE_PRIVATE);
-        job_no = s.getString("job_id", "");
-        Log.e("jobno", job_no);
+        SharedPreferences sh1 = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        job_no = sh1.getString("jobid", job_no);
+        Log.e("jobiddd", job_no);
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
         ukeyy = sharedPreferences.getString("ukey", "");
         Log.e("ukey", ukeyy);
 
+        if (job_no != null) {
+            jobno.setText("Job No : " + job_no);
+        }
+        drp_value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                  Valueeee=drp_value.getSelectedItem().toString();
+                Log.w(TAG,"Valueee"+Valueeee);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (drp_value.getSelectedItem().toString().trim().equals("Select Engineer")) {
-                    Toast.makeText( getApplicationContext(), "Please Select any Value", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                    Toast.makeText(getApplicationContext(), "Please Select any Value", Toast.LENGTH_SHORT).show();
+                } else {
                     rowBasedStroeDataRequestCall();
                 }
             }
@@ -229,23 +249,23 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
                             showSubmittedSuccessful();
 
 
-                            }
-
-
-
-                        } else {
-                            dialog.dismiss();
-
                         }
+
+
+                    } else {
+                        dialog.dismiss();
+
                     }
                 }
+            }
+
             @Override
             public void onFailure(Call<JoinInspectionResponse> call, Throwable t) {
                 dialog.dismiss();
                 Log.e(TAG, "--->" + t.getMessage());
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            });
+        });
 
     }
 
@@ -256,12 +276,16 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
         joininspectiondialog.setContentView(R.layout.alert_sucess_clear);
         Button btn_goback = joininspectiondialog.findViewById(R.id.btn_goback);
         TextView txt_success_msg = joininspectiondialog.findViewById(R.id.txt_success_msg);
+        TextView txt_job_id = joininspectiondialog.findViewById(R.id.txt_job_id);
+        txt_job_id.setVisibility(View.VISIBLE);
+        txt_job_id.setText("Job No : " + job_no);
+        Log.e("jobbb", job_no);
         txt_success_msg.setText("All data submitted successfully to engineer.");
-        TextView txt_clear=joininspectiondialog.findViewById(R.id.txt_clear_msg);
+        TextView txt_clear = joininspectiondialog.findViewById(R.id.txt_clear_msg);
         txt_clear.setVisibility(View.GONE);
         float scale = getResources().getDisplayMetrics().density;
 
-           btn_goback.setOnClickListener(new View.OnClickListener() {
+        btn_goback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 joininspectiondialog.dismiss();
@@ -274,7 +298,7 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
                 intent.putExtra("UKEY", UKEY);
                 intent.putExtra("new_count", new_count);
                 intent.putExtra("pause_count", pause_count);*/
-                 overridePendingTransition(R.anim.new_right, R.anim.new_left);
+                overridePendingTransition(R.anim.new_right, R.anim.new_left);
 
             }
         });
@@ -290,8 +314,7 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
 
         JoinInspectionRequest joinInspectionrequest = new JoinInspectionRequest();
         joinInspectionrequest.setJob_no(job_no);
-        joinInspectionrequest.setName(string);
-        Log.e("name",string);
+        joinInspectionrequest.setName(Valueeee);
 
 
         Log.w(TAG, "update_join_inspect_hdr/create_Request " + new Gson().toJson(joinInspectionrequest));
@@ -337,7 +360,6 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
     }
 
 
-
     private void breedTypeResponseByPetIdCall() {
         APIInterface apiInterface = RetrofitClient.getClient().create(APIInterface.class);
         Call<BreedTypeResponse1> call = apiInterface.breedTypeResponseByPetIdCall(RestUtils.getContentType(), breedTypeRequest());
@@ -366,7 +388,7 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
 
 
                             for (int i = 0; i < breedTypedataBeanList.size(); i++) {
-                                  string = breedTypedataBeanList.get(i).getName();
+                                string = breedTypedataBeanList.get(i).getName();
                                 Log.w(TAG, "spr string-->" + string);
                                 names.add(string);
 
@@ -392,14 +414,13 @@ public class ActivitySelectEngineerPopup extends AppCompatActivity implements Pe
 
     }
 
-    private BreedTypeRequest1 breedTypeRequest( ) {
+    private BreedTypeRequest1 breedTypeRequest() {
         BreedTypeRequest1 breedTypeRequest = new BreedTypeRequest1();
         breedTypeRequest.setJob_id(job_no);
+        breedTypeRequest.setName(string);
         Log.w(TAG, "breedTypeRequest" + "--->" + new Gson().toJson(breedTypeRequest));
         return breedTypeRequest;
     }
-
-
 
 
     @Override

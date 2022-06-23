@@ -109,6 +109,7 @@ public class ActivityBasedListAdapter extends  RecyclerView.Adapter<RecyclerView
             intent.putExtra("new_count",dataBeanList.get(position).getNEW_ACTIVITY());
             intent.putExtra("pause_count",dataBeanList.get(position).getWIP_ACTIVITY());
             intent.putExtra("activity_id",dataBeanList.get(position).get_id());
+            Log.w(TAG,"iddddddddddd"+dataBeanList.get(position).get_id());
             intent.putExtra("UKEY",dataBeanList.get(position).getUKEY());
             intent.putExtra("UKEY_DESC",dataBeanList.get(position).getUKEY_DESC());
             intent.putExtra("form_type",dataBeanList.get(position).getForm_type());

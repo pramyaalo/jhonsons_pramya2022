@@ -67,8 +67,8 @@
             android:layout_width="@dimen/_50dp"
             android:layout_height="@dimen/_50dp"
             android:layout_weight=".1"
-            android:visibility="invisible"
-             android:src="@mipmap/localicon"/>
+            android:visibility="gone"
+               android:src="@mipmap/localicon"/>
 
 
 
