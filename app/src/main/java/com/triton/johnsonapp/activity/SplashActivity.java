@@ -97,7 +97,7 @@ public class SplashActivity extends AppCompatActivity {
                     {
                         Log.w(TAG,"dATA"+response.body().getData().getVersion());
 
-                        if(response.body().getData().getVersion().equals("23.05.2022")){
+                        if(response.body().getData().getVersion().equals("20.06.2022")){
                             Thread timerThread = new Thread() {
                                 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                                 public void run() {
@@ -132,13 +132,17 @@ public class SplashActivity extends AppCompatActivity {
                             timerThread.start();
                         }
                         else{
-                            Log.w(TAG,"dATA-0000--"+response.body().getData().getVersion());
+
+                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.new_right, R.anim.new_left);
+                            /*Log.w(TAG,"dATA-0000--"+response.body().getData().getVersion());
                             String apk_link = response.body().getData().getApk_link();
                             String apk_version = response.body().getData().getVersion();
                             Intent intent = new Intent(SplashActivity.this, DownloadapkfileActivity.class);
                             intent.putExtra("apk_link",apk_link);
                             intent.putExtra("apk_version",apk_version);
-                            startActivity(intent);
+                            startActivity(intent);*/
                         }
 
                     }else

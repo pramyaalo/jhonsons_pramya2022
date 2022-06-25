@@ -160,15 +160,20 @@ public class ActivityJobListActivity extends AppCompatActivity implements OnMapR
             status = extras.getString("status");
             UKEY = extras.getString("UKEY");
             UKEY_DESC = extras.getString("UKEY_DESC");
+            Log.w(TAG,"ukeynewdesc"+UKEY_DESC);
+
             form_type = extras.getInt("form_type");
             new_count = extras.getInt("new_count");
-
-            Log.w(TAG,"ukey"+UKEY);
+       // Log.w(TA)
+            Log.w(TAG,"ukeynew"+UKEY);
             pause_count = extras.getInt("pause_count");
-            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("ukey",UKEY );
-            editor.apply();
+
+            SharedPreferences sharedPref1= getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPref1.edit();
+            edit.putString("UKEY",UKEY );
+            edit.apply();
+
+
             Log.w(TAG,"activity_id -->"+activity_id+" status : "+status);
 
             if(status != null && status.equalsIgnoreCase("New")){
@@ -251,6 +256,12 @@ public class ActivityJobListActivity extends AppCompatActivity implements OnMapR
         intent.putExtra("pause_count",pause_count);
         startActivity(intent);
         overridePendingTransition(R.anim.new_right, R.anim.new_left);
+
+        SharedPreferences sp1 = getSharedPreferences("myKey", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp1.edit();
+        ed.putString("status", status);
+        Log.e("statusssssssssss", status);
+        ed.commit();
 
 
     }

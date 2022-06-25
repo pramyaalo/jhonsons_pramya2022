@@ -3,6 +3,8 @@ package com.triton.johnsonapp.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +38,11 @@ public class ServiceListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewH
     String activity_id;
     String job_id;
     String group_id;
+    String Ukey;
     String fromactivity;
     String status;
-    public ServiceListAdapter(Context context, List<SubGroupDetailManagementResponse.DataBean> dataBeanList, String activity_id, String job_id, String group_id,  String fromactivity,String status) {
+    String work_status;
+    public ServiceListAdapter(Context context, List<SubGroupDetailManagementResponse.DataBean> dataBeanList, String activity_id, String job_id, String group_id,  String fromactivity,String status,String Ukey,String work_status) {
         this.context = context;
         this.dataBeanList = dataBeanList;
         this.activity_id=activity_id;
@@ -46,6 +50,8 @@ public class ServiceListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewH
         this.group_id=group_id;
         this.fromactivity=fromactivity;
         this.status=status;
+        this.Ukey=Ukey;
+        this.work_status=work_status;
 
     }
 
@@ -95,14 +101,23 @@ public class ServiceListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewH
 
                 if(dataBeanList.get(position).getForm_type().equals("1")){
                     Intent intent = new Intent(context, InputValueFormListActivity.class);
+
                     intent.putExtra("activity_id",activity_id);
                     intent.putExtra("job_id",job_id);
+                    intent.putExtra("UKEY",Ukey);
+                    Log.w(TAG,"UKEYv" + Ukey);
                     intent.putExtra("group_id",group_id);
                     intent.putExtra("subgroup_id",dataBeanList.get(position).get_id());
                     intent.putExtra("fromactivity",fromactivity);
                     intent.putExtra("status",status);
                     intent.putExtra("sub_group_detail_name",dataBeanList.get(position).getSub_group_detail_name());
                     context.startActivity(intent);
+
+
+                    SharedPreferences sharedPreferences1 = context.getSharedPreferences("mykey",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor myEdit1 = sharedPreferences1.edit();
+                    myEdit1.putString("work_status", work_status);
+                    myEdit1.commit();
                 }
 
                 else if(dataBeanList.get(position).getForm_type().equals("2")){
@@ -133,6 +148,8 @@ public class ServiceListAdapter extends  RecyclerView.Adapter<RecyclerView.ViewH
                     intent.putExtra("activity_id",activity_id);
                     intent.putExtra("job_id",job_id);
                     intent.putExtra("group_id",group_id);
+                    intent.putExtra("UKEY",Ukey);
+                    Log.w(TAG,"UKEYv" + Ukey);
                     intent.putExtra("subgroup_id",dataBeanList.get(position).get_id());
                     intent.putExtra("sub_group_detail_name",dataBeanList.get(position).getSub_group_detail_name());
                     intent.putExtra("status",status);

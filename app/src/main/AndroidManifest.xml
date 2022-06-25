@@ -37,6 +37,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:extractNativeLibs="true"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
@@ -158,6 +159,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".activity.ViewDatas"
+            tools:ignore="LockedOrientationActivity"/>
         <activity
             android:name=".activity.ViewInfoDetailsActivity"
             android:exported="true"
@@ -202,5 +205,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

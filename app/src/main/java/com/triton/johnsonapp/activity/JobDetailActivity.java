@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -80,7 +81,13 @@ public class JobDetailActivity extends AppCompatActivity {
 
     private String search_string ="";
     private String status = "";
-
+    private String UKEY;
+    private String UKEY_DESC;
+    private int form_type;
+    SessionManager session;
+    private String SMU_DWNFLAG = "";
+    private int  new_count;
+    private int  pause_count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +95,7 @@ public class JobDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Log.w(TAG,"Oncreate -->");
 
-        SessionManager session = new SessionManager(getApplicationContext());
+          session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         userid = user.get(SessionManager.KEY_ID);
 
@@ -98,11 +105,35 @@ public class JobDetailActivity extends AppCompatActivity {
         if (extras != null) {
             activity_id = extras.getString("activity_id");
             status = extras.getString("status");
+            UKEY = extras.getString("UKEY");
+            UKEY_DESC = extras.getString("UKEY_DESC");
+            form_type = extras.getInt("form_type");
+            new_count = extras.getInt("new_count");
+
+            Log.w(TAG,"ukey"+UKEY);
+            pause_count = extras.getInt("pause_count");
+
+            SharedPreferences sharedPref1= getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
+            SharedPreferences.Editor edit = sharedPref1.edit();
+            edit.putString("UKEY",UKEY );
+            Log.e("keyyyyyyyy",  UKEY);
+            edit.apply();
+
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("myKey", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("form_type",form_type );
+            Log.e("formmm", String.valueOf(form_type));
+            editor.apply();
             Log.w(TAG,"activity_id -->"+activity_id+" status : "+status);
+
+            if(status != null && status.equalsIgnoreCase("New")){
+                SMU_DWNFLAG = "N";
+            }else if(status != null && status.equalsIgnoreCase("Pause")){
+                SMU_DWNFLAG = "Y";
+            }
 
 
         }
-
         edt_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {

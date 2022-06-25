@@ -12,6 +12,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.triton.johnsonapp.R;
@@ -49,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     WebView webView;
 
     @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.ll_logout)
-    LinearLayout ll_logout;
+    @BindView(R.id.img_logout)
+    ImageView img_logout;
 
     private SessionManager session;
     private String url = "http://smart.johnsonliftsltd.com/";
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         btn_goback.setVisibility(View.GONE);
          //btn_webview.setVisibility(View.INVISIBLE);
 
-        ll_logout.setOnClickListener(new View.OnClickListener() {
+        img_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 session.logoutUser();

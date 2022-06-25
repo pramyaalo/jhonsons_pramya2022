@@ -71,7 +71,7 @@ public class GetJobDetailByActivityResponse {
         private String job_detail_updated_by;
         private String update_reason;
         private int __v;
-        private String activedetail_id;
+        private String group_id;
 
         public String get_id() {
             return _id;
@@ -145,12 +145,12 @@ public class GetJobDetailByActivityResponse {
             this.__v = __v;
         }
 
-        public String getActivedetail_id() {
-            return activedetail_id;
+        public String getGroup_id() {
+            return group_id;
         }
 
-        public void setActivedetail_id(String activedetail_id) {
-            this.activedetail_id = activedetail_id;
+        public void setGroup_id(String group_id) {
+            this.group_id = group_id;
         }
     }
 }
